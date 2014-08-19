@@ -1,0 +1,89 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<html ng-app="oauthApp">
+<head>
+	<title>Node Authentication</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+	<style>
+		body 		{ padding-top:80px; }
+	</style>
+</head>
+<body ng-controller="mainCtrl as main">
+<div class="container">
+
+        <div ui-view>
+        </div>
+
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular-resource.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+<script>
+function config ($stateProvider, $urlRouterProvider, $locationProvider) {
+	$locationProvider.html5Mode(true);
+
+	$stateProvider
+		.state("/", {
+			url: '/',
+			templateUrl: "home.html"
+		})
+		.state("login", {
+			url: '/login',
+			templateUrl: 'login.ejs',
+		})
+		.state("signup", {
+			url: '/signup',
+			templateUrl: 'signup.ejs',
+		})
+		.state("user", {
+			url: '/user',
+			templateUrl: 'user.ejs',
+		})
+		.state("profile", {
+			url: '/profile',
+			templateUrl: 'profile.ejs',
+		})
+	$urlRouterProvider.when('', '/');
+
+    $urlRouterProvider.otherwise('/');
+};
+
+function mainCtrl(Login_factory, $rootScope){
+
+	this.login = function(loginForm){
+		var ita = Login_factory.go(loginForm);
+	}
+
+	this.c = function(){
+		Login_factory.go().postLogin()
+	}
+}
+
+function Login_factory($http, $window) {
+	this.login = {};
+	this.login.go = function(form){
+		return  $http.post('/login', {"email":form.user, "password":form.password})
+      		.success(function(data, status, params){
+      			if(status === 200){
+      				$window.location.href="/#/profile"
+      			}else{
+      				console.log(status);
+      			}
+      		})
+      		.error(function(err, status, headers, config){
+      			console.log(err, status, headers, config);
+      		})
+	}
+	return this.login;
+    
+};
+
+	angular
+		.module('oauthApp', ['ui.router', 'ngResource'])
+		.config(config)
+		.controller('mainCtrl', mainCtrl)
+		.factory('Login_factory', Login_factory)
+</script>
+</body>
+</html>

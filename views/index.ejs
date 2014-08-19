@@ -1,0 +1,55 @@
+<!-- views/index.ejs -->
+<!doctype html>
+<html ng-app="oauthApp">
+<head>
+	<title>Node Authentication</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+	<style>
+		body 		{ padding-top:80px; }
+	</style>
+</head>
+<body>
+<div class="container">
+
+        <div ui-view>
+        </div>
+
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.22/angular.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.10/angular-ui-router.min.js"></script>
+<script>
+function config ($stateProvider, $urlRouterProvider) {
+	//$locationProvider.html5Mode(true);
+
+	$stateProvider
+		.state("/", {
+			url: '/',
+			templateUrl: "home.ejs"
+		})
+		.state("login", {
+			url: '/login',
+			templateUrl: 'login.ejs',
+		})
+		.state("signup", {
+			url: '/signup',
+			templateUrl: 'signup.ejs',
+		})
+		.state("user", {
+			url: '/user',
+			templateUrl: 'user.ejs',
+		})
+		.state("profile", {
+			url: '/profile',
+			templateUrl: 'index.html',
+		})
+	$urlRouterProvider.when('', '/');
+
+    $urlRouterProvider.otherwise('/');
+}
+	angular
+		.module('oauthApp', ['ui.router'])
+		.config(config)
+</script>
+</body>
+</html>
