@@ -6,7 +6,7 @@
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
 	<style>
-		body 		{ padding-top:80px; }
+		body 		{ padding-top:80px; background: #222; color: #888; }
 	</style>
 </head>
 <body ng-controller="mainCtrl as main">
@@ -49,21 +49,21 @@ function config ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider.otherwise('/');
 };
 
-function mainCtrl(Login_factory, $rootScope){
+function mainCtrl(Login_factory, SignUp_factory){
 
-	this.login = function(loginForm){
-		var ita = Login_factory.go(loginForm);
+	this.login = function(form){
+		Login_factory.go(form);
 	}
 
-	this.c = function(){
-		Login_factory.go().postLogin()
+	this.signUp = function(form){
+		SignUp_factory.go(form);
 	}
 }
 
 function Login_factory($http, $window) {
 	this.login = {};
 	this.login.go = function(form){
-		return  $http.post('/login', {"email":form.user, "password":form.password})
+		return  $http.post('/login', {"email":form.email, "password":form.password})
       		.success(function(data, status, params){
       			if(status === 200){
       				$window.location.href="/#/profile"
@@ -79,11 +79,31 @@ function Login_factory($http, $window) {
     
 };
 
+function SignUp_factory($http, $window){
+	this.signUp = {};
+	this.signUp.go = function(form){
+		return  $http.post('/signup', {"email":form.email, "password":form.password})
+      		.success(function(data, status, params){
+      			if(status === 200){
+      				$window.location.href="/#/login"
+      			}else{
+      				console.log(status);
+      			}
+      		})
+      		.error(function(err, status, headers, config){
+      			console.log(err, status, headers, config);
+      		})
+	}
+	return this.signUp;
+
+}
+
 	angular
 		.module('oauthApp', ['ui.router', 'ngResource'])
 		.config(config)
 		.controller('mainCtrl', mainCtrl)
 		.factory('Login_factory', Login_factory)
+		.factory('SignUp_factory', SignUp_factory)
 </script>
 </body>
 </html>

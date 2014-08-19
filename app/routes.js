@@ -7,7 +7,7 @@ res.send( util.inspect(res))*/
 	// =====================================
 	app.get('/', function(req, res) {
 		//res.render('home.ejs');
-		res.render('index.ejs'); // load the index.ejs file
+		res.render('index.html');
 	});
 
 	// =====================================
@@ -17,9 +17,9 @@ res.send( util.inspect(res))*/
 	app.get('/login', function(req, res) {
 
 		// render the page and pass in any flash data if it exists
-		res.send({message: req.flash('loginMessage')}); 
-		res.redirect('/')
-		console.log('get a login');
+		/*res.send({message: req.flash('loginMessage')}); 
+		res.redirect('/')*/
+		res.render('index.html');
 	});
 
 	// process the login form
